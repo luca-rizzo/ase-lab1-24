@@ -27,7 +27,7 @@ jobs:
       run: |
         cd ./src/calc
         docker build -t calc_with_mock  -f Dockerfile_test .
-        docker run -p 5000:5000 --name calc_with_mock calc_with_mock -d
+        docker run -d -p 5000:5000 --name calc_with_mock calc_with_mock
         newman run ../../tests/calc_ut.postman_collection.json
         docker stop calc_with_mock
         docker rm calc_with_mock
@@ -35,7 +35,7 @@ jobs:
     - name: Unit test string
       run: |
         cd ./src/string
-        docker build -t string_with_mock  -f Dockerfile_test .
+        docker build -d -t string_with_mock  -f Dockerfile_test .
         docker run -p 5000:5000 --name string_with_mock string_with_mock -d
         newman run ../../tests/string_ut.postman_collection.json
         docker stop string_with_mock
@@ -44,6 +44,6 @@ jobs:
     - name: Integration test
       run: | 
         cd ./src
-        docker compose up --build -d
+        docker compose up -d --build
         newman run ../../tests/integration.postman_collection.json
         docker compose stop
