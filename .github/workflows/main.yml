@@ -45,5 +45,5 @@ jobs:
       run: | 
         cd ./src
         docker compose up -d --build
-        newman run ../../tests/integration.postman_collection.json
+        newman run ../tests/integration.postman_collection.json
         docker compose stop
