@@ -1,0 +1,49 @@
+name: Python Application CI lesson 8
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install Newman
+      run: |
+        npm install -g newman
+
+    - name: Setup docker
+      uses: docker/setup-buildx-action@v2
+
+    - name: Unit test calc
+      run: |
+        cd ./src/calc
+        docker build -t calc_with_mock  -f Dockerfile_test .
+        docker run -p 5000:5000 --name calc_with_mock calc_with_mock -d
+        newman run ../../tests/calc_ut.postman_collection.json
+        docker stop calc_with_mock
+        docker rm calc_with_mock
+
+    - name: Unit test string
+      run: |
+        cd ./src/string
+        docker build -t string_with_mock  -f Dockerfile_test .
+        docker run -p 5000:5000 --name string_with_mock string_with_mock -d
+        newman run ../../tests/string_ut.postman_collection.json
+        docker stop string_with_mock
+        docker rm string_with_mock
+
+    - name: Integration test
+      run: | 
+        cd ./src
+        docker compose up --build -d
+        newman run ../../tests/integration.postman_collection.json
+        docker compose stop
