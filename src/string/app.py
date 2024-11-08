@@ -22,6 +22,7 @@ def upper():
         return make_response('Invalid input\n', 400)
     res = a.upper()
     save_last("upper","("+a+")",res)
+    print("ciao")
     return make_response(jsonify(s=res), 200)
 
 @app.route('/lower')
