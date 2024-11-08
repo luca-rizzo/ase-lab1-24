@@ -23,6 +23,7 @@ def upper():
     res = a.upper()
     save_last("upper","("+a+")",res)
     print("ciao")
+    print("ciao")
     return make_response(jsonify(s=res), 200)
 
 @app.route('/lower')
